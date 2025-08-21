@@ -1,0 +1,28 @@
+name: Deploy to Vercel
+
+on:
+  push:
+    branches:
+      - stage
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run tests (optional)
+        run: |
+          npm install
+          npm run build
+
+      - name: Trigger Vercel Deployment
+        run: |
+          if [ "${GITHUB_REF##*/}" == "main" ]; then
+            echo "🚀 Deploying to PRODUCTION..."
+            curl -X POST https://api.vercel.com/v1/integrations/deploy/prj_ZoGBx6xpFpZ0MA4pwX43IeGweTRO/ADkPqtZoC4
+          elif [ "${GITHUB_REF##*/}" == "stage" ]; then
+            echo "🚀 Deploying to STAGING..."
+            curl -X POST https://api.vercel.com/v1/integrations/deploy/prj_ZoGBx6xpFpZ0MA4pwX43IeGweTRO/jNY8IMU7zD
+          fi
