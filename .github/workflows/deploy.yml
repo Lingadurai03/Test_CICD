@@ -39,10 +39,10 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     needs: build
-    steps: *setup
-    # Add lint step after setup
-    - name: Run ESLint
-      run: npm run lint --if-present
+    steps:
+      <<: *setup
+      - name: Run ESLint
+        run: npm run lint --if-present
 
   # ---------------------
   # Testing Job
@@ -50,9 +50,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     needs: lint
-    steps: *setup
-    - name: Run tests
-      run: npm test
+    steps:
+      <<: *setup
+      - name: Run tests
+        run: npm test
 
   # ---------------------
   # Security Scan: npm audit
@@ -60,9 +61,10 @@ jobs:
   security:
     runs-on: ubuntu-latest
     needs: test
-    steps: *setup
-    - name: Run npm audit
-      run: npm audit --audit-level=high || true
+    steps:
+      <<: *setup
+      - name: Run npm audit
+        run: npm audit --audit-level=high || true
 
   # ---------------------
   # Security Scan: Gitleaks
